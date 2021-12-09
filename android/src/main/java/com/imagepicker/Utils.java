@@ -494,7 +494,22 @@ public class Utils {
 
         for(int i = 0; i < fileUris.size(); ++i) {
             Uri uri = fileUris.get(i);
-
+            String strUri = uri.getPath();
+            if (strUri.contains("NONE")) {
+                String tmp = "content://";
+                String[] tmpArr = strUri.split("content://");
+                if (tmpArr.length > 1) {
+                    tmp = tmp + tmpArr[1];
+                } else {
+                    tmp = tmp + tmpArr[0];
+                }
+                if (tmp.contains("ORIGINAL")) {
+                    tmp = tmp.split("ORIGINAL")[0];
+                }
+                tmp = tmp.replace("/NONE/", "/");
+                uri = Uri.parse(tmp);
+            }
+            
             if (isImageType(uri, context)) {
                 if (uri.getScheme().contains("content")) {
                     uri = getAppSpecificStorageUri(uri, context);
